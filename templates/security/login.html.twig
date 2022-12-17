@@ -1,17 +1,38 @@
 {% extends 'base.html.twig' %}
 
+{% block header_title %}
+    <h1 class="display-4 fw-bolder text-center mt-0 mb-0">Bienvenue sur Todo List,</h1>
+    <p class="lead fw-normal text-black-50 text-center mt-0">l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</p>
+{% endblock %}
+
+{% block header_content %}
+    <div class="text-center mt-2">
+        <img class="img-fluid" src="{{ asset('img/todolist_homepage.jpg') }}" />
+    </div>
+{% endblock %}
+
 {% block body %}
     {% if error %}
         <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form action="{{ path('login_check') }}" method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <form action="{{ path('app_login') }}" method="post">
+                <div class="form-group mb-2">
+                    <label for="username">Nom d'utilisateur :</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" />
+                </div>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+                <div class="form-group mb-2">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="_password" class="form-control" />
+                </div>
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+                <div class="form-group mt-3 mb-2 text-center">
+                    <button class="btn btn-success" type="submit">Se connecter</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/users", name="user_list")
+     * @Route("/users", name="app_user_list")
      */
     public function listAction(UserRepository $userRepository)
     {
@@ -22,7 +22,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/create", name="user_create")
+     * @Route("/users/create", name="app_user_create")
      */
     public function createAction(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $pwdHasher)
     {
@@ -40,14 +40,14 @@ class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_user_list');
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="app_user_edit")
      */
     public function editAction(User $user, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $pwdHasher)
     {
@@ -64,7 +64,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_user_list');
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
