@@ -36,30 +36,33 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 w-100 justify-content-end">
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_home') }}">Accueil</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tâches</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ path('app_task_create') }}" class="btn btn-success">Créer une nouvelle tâche</a></li>
-                                <li><a class="dropdown-item" href="{{ path('app_task_list') }}" class="btn btn-info">Consulter la liste des tâches à faire</a></li>
-                                <li><a class="dropdown-item" href="" class="btn btn-secondary">Consulter la liste des tâches terminées</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Utilisateurs</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">Gérer les utilisateurs</a></li>
-                                <li><a class="dropdown-item" href="{{ path('app_user_create') }}">Créer un utilisateur</a></li>
-                            </ul>
-                        </li>
 
-                        <li class="nav-item">
-                            {% if app.user %}
+                        {% if app.user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tâches</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{{ path('app_task_create') }}" class="btn btn-success">Créer une nouvelle tâche</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_task_list') }}" class="btn btn-info">Consulter la liste des tâches à faire</a></li>
+                                    <li><a class="dropdown-item" href="" class="btn btn-secondary">Consulter la liste des tâches terminées</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Utilisateurs</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#!">Gérer les utilisateurs</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_user_create') }}">Créer un utilisateur</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                            </li>
                             {% endif %}
-                            {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                                <a class="nav-link" href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+
+                            {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+                                </li>
                             {% endif %}
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -76,7 +79,7 @@
         <!-- Page Content -->
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 mt-3">
                     {% for flash_message in app.session.flashBag.get('success') %}
                         <div class="alert alert-success" role="alert">
                             <strong>Superbe !</strong> {{ flash_message }}

@@ -19,38 +19,55 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // users creation
-        $user = new User();
-        $user
-            ->setUsername('Anonyme')
-            ->setEmail('anonyme@todo.co')
-            ->setPassword($this->pwdHasher->hashPassword($user, "Abcd1234"));
-        $manager->persist($user);
+        // anonymous user creation
+        $anonymous = new User();
+        $anonymous
+            ->setUsername('Anonymous')
+            ->setEmail('anonymous@todo.co')
+            ->setPassword($this->pwdHasher->hashPassword($anonymous, "Abcd1234"))
+            ->setIsActive(false);
+        $manager->persist($anonymous);
 
-        $user = new User();
-        $user
+        // admin user
+        $admin = new User();
+        $admin
             ->setUsername('Admin')
             ->setEmail('admin@todo.co')
-            ->setPassword($this->pwdHasher->hashPassword($user, "Abcd1234"))
-            ->setRoles(['ROLE_ADMIN']);
-        $manager->persist($user);
+            ->setPassword($this->pwdHasher->hashPassword($admin, "Abcd1234"))
+            ->setRoles(['ROLE_ADMIN'])
+            ->setIsActive(true);
+        $manager->persist($admin);
 
+        // simple user
         $user = new User();
         $user
             ->setUsername('User')
             ->setEmail('user@todo.co')
             ->setPassword($this->pwdHasher->hashPassword($user, "Abcd1234"))
-            ->setRoles(['ROLE_USER']);
+            ->setRoles(['ROLE_USER'])
+            ->setIsActive(true);
         $manager->persist($user);
 
         // tasks creation
-        for ($i = 1; $i < 6; $i++) {
+        for ($i = 1; $i < 10; $i++) {
             $task = new Task();
             $task
                 ->setTitle('Titre tâche n° ' . $i)
                 ->setContent('Description de la tâche ' . $i)
                 ->setCreatedAt(new \DateTime())
-                ->toggle(false);
+                ->toggle(false)
+                ->setAuthor($anonymous);
+            
+            if ($i < 6) {
+                $task->setAuthor($anonymous);
+            }
+            elseif ($i < 8) {
+                $task->setAuthor($admin);
+            }
+            else {
+                $task->setAuthor($user);
+            }
+
             $manager->persist($task);
         }
 
