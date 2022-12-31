@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Service\Task\CreateTaskService;
+use App\Service\Task\DeleteTaskService;
+use App\Service\Task\EditTaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,19 +15,32 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController
 {
+
+    private const ERR_AUTHENTICATION_REQUIRED = "Vous devez être authentifié pour accéder à cette fonctionnalité.";
+
     /**
      * @Route("/tasks", name="app_task_list")
      */
     public function listAction(TaskRepository $taskRepository)
     {
+        if (null === $this->getUser()) {
+            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
+            return $this->redirectToRoute('app_home');
+        }
+
         return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
     }
 
     /**
      * @Route("/tasks/create", name="app_task_create")
      */
-    public function createAction(Request $request, EntityManagerInterface $em)
+    public function createAction(Request $request, CreateTaskService $service)
     {
+        if (null === $this->getUser()) {
+            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
+            return $this->redirectToRoute('app_home');
+        }
+
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
@@ -32,38 +48,70 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->persist($task);
-            $em->flush();
+            $service->createTask($task, $this->getUser());
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            if (true === $service->getStatus()) {
+                $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+                return $this->redirectToRoute('app_task_list');
+            }
 
-            return $this->redirectToRoute('app_task_list');
+            // status = false !
+            foreach ($service->getErrorsMessages() as $message) {
+                $this->addFlash('error', $message);
+            }
         }
 
-        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+        return $this->render('task/taskForm.html.twig', ['form' => $form->createView(), 'mode' => "create"]);
     }
 
     /**
      * @Route("/tasks/{id}/edit", name="app_task_edit")
      */
-    public function editAction(Task $task, Request $request, EntityManagerInterface $em)
+    public function editAction(?Task $task, Request $request, EditTaskService $service)
     {
-        $form = $this->createForm(TaskType::class, $task);
+        if (null === $this->getUser()) {
+            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
+            return $this->redirectToRoute('app_home');
+        }
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($task);
-            $em->flush();
-
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
-
+        if (null === $task) {
+            $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");
             return $this->redirectToRoute('app_task_list');
         }
 
-        return $this->render('task/edit.html.twig', [
+        // The task can only be modified if the author is Anonymous and the user is an administrator 
+        // OR if the user is the author of the task
+        if (!(
+            ($task->getAuthor()->getUserIdentifier() === "Anonymous" 
+                && in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
+            || $task->getAuthor() === $this->getUser()
+        )) {
+            $this->addFlash('error', 'Vous ne pouvez pas effectuer cette action');
+            return $this->redirectToRoute('app_task_list');
+        }
+
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $service->editTask($task, $this->getUser());
+
+            if (true === $service->getStatus()) {
+                $this->addFlash('success', 'La tâche a été bien été modifiée.');
+                return $this->redirectToRoute('app_task_list');
+            }
+
+            // status = false !
+            foreach ($service->getErrorsMessages() as $message) {
+                $this->addFlash('error', $message);
+            }
+        }
+
+        return $this->render('task/taskForm.html.twig', [
             'form' => $form->createView(),
             'task' => $task,
+            'mode' => "edit"
         ]);
     }
 
@@ -75,6 +123,7 @@ class TaskController extends AbstractController
         $task->toggle(!$task->isDone());
         $em->persist($task);
         $em->flush();
+        
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -84,12 +133,42 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="app_task_delete")
      */
-    public function deleteTaskAction(Task $task, EntityManagerInterface $em)
+    public function deleteTaskAction(Task $task, DeleteTaskService $service)
     {
-        $em->remove($task);
-        $em->flush();
+        if (null === $this->getUser()) {
+            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
+            return $this->redirectToRoute('app_home');
+        }
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        if (null === $task) {
+            $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");
+            return $this->redirectToRoute('app_task_list');
+        }
+
+        // The task can only be deleted if the author is Anonymous and the user is an administrator 
+        // OR if the user is the author of the task
+        /*
+        if (!(
+            ($task->getAuthor()->getUserIdentifier() === "Anonymous" 
+                && in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
+            || $task->getAuthor() === $this->getUser()
+        )) {
+            $this->addFlash('error', 'Vous ne pouvez pas effectuer cette action');
+            return $this->redirectToRoute('app_task_list');
+        }
+        */
+
+        $service->deleteTask($task, $this->getUser());
+
+        if (true === $service->getStatus()) {
+            $this->addFlash('success', 'La tâche a été bien été supprimée.');
+            return $this->redirectToRoute('app_task_list');
+        }
+
+        // status = false !
+        foreach ($service->getErrorsMessages() as $message) {
+            $this->addFlash('error', $message);
+        }
 
         return $this->redirectToRoute('app_task_list');
     }

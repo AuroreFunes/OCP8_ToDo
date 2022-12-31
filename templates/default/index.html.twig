@@ -14,11 +14,22 @@
 
 {% block body %}
 
-    <div class="row">
-        <div class="d-inline-flex justify-content-around">
-            <a href="{{ path('app_task_create') }}" class="btn btn-success m-2 flex-grow-1">Créer une nouvelle tâche</a>
-            <a href="{{ path('app_task_list') }}" class="btn btn-info m-2 flex-grow-1">Consulter la liste des tâches à faire</a>
-            <a href="" class="btn btn-secondary m-2 flex-grow-1">Consulter la liste des tâches terminées</a>
+    {% if app.user %}
+        <div class="row">
+            <div class="d-inline-flex justify-content-around">
+                <a href="{{ path('app_task_create') }}" class="btn btn-success m-2 flex-grow-1">Créer une nouvelle tâche</a>
+                <a href="{{ path('app_task_list') }}" class="btn btn-info m-2 flex-grow-1">Consulter la liste des tâches à faire</a>
+                <a href="" class="btn btn-secondary m-2 flex-grow-1">Consulter la liste des tâches terminées</a>
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="row mb-3">
+            <p class="text-center">
+                Vous devez être authentifié pour accéder à l'application.
+            </p>
+            <div class="d-inline-flex justify-content-around">
+                <a href="{{ path('app_login') }}" class="btn btn-info">Vous connecter</a>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
