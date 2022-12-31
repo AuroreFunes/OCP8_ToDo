@@ -79,17 +79,14 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_task_list');
         }
 
-        // If the author of the task is "Anonymous", an administrator can modify it
-        if ($task->getAuthor()->getUserIdentifier() === "Anonymous") {
-            if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-                $this->addFlash('error', "Seul un administrateur peut modifier cette tâche.");
-                return $this->redirectToRoute('app_task_list');
-            }
-        }
-
-        // Modification is only possible if the user is the author of the task
-        if ($task->getAuthor() !== $this->getUser()) {
-            $this->addFlash('error', "Seul L'auteur d'une tâche est autorisé à la modifier.");
+        // The task can only be modified if the author is Anonymous and the user is an administrator 
+        // OR if the user is the author of the task
+        if (!(
+            ($task->getAuthor()->getUserIdentifier() === "Anonymous" 
+                && in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
+            || $task->getAuthor() === $this->getUser()
+        )) {
+            $this->addFlash('error', 'Vous ne pouvez pas effectuer cette action');
             return $this->redirectToRoute('app_task_list');
         }
 
@@ -121,13 +118,11 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="app_task_toggle")
      */
-    public function toggleTaskAction(Task $task, EntityManagerInterface $em, DeleteTaskService $service)
+    public function toggleTaskAction(Task $task, EntityManagerInterface $em)
     {
         $task->toggle(!$task->isDone());
         $em->persist($task);
         $em->flush();
-
-
         
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
@@ -138,12 +133,42 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="app_task_delete")
      */
-    public function deleteTaskAction(Task $task, EntityManagerInterface $em)
+    public function deleteTaskAction(Task $task, DeleteTaskService $service)
     {
-        $em->remove($task);
-        $em->flush();
+        if (null === $this->getUser()) {
+            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
+            return $this->redirectToRoute('app_home');
+        }
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        if (null === $task) {
+            $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");
+            return $this->redirectToRoute('app_task_list');
+        }
+
+        // The task can only be deleted if the author is Anonymous and the user is an administrator 
+        // OR if the user is the author of the task
+        /*
+        if (!(
+            ($task->getAuthor()->getUserIdentifier() === "Anonymous" 
+                && in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
+            || $task->getAuthor() === $this->getUser()
+        )) {
+            $this->addFlash('error', 'Vous ne pouvez pas effectuer cette action');
+            return $this->redirectToRoute('app_task_list');
+        }
+        */
+
+        $service->deleteTask($task, $this->getUser());
+
+        if (true === $service->getStatus()) {
+            $this->addFlash('success', 'La tâche a été bien été supprimée.');
+            return $this->redirectToRoute('app_task_list');
+        }
+
+        // status = false !
+        foreach ($service->getErrorsMessages() as $message) {
+            $this->addFlash('error', $message);
+        }
 
         return $this->redirectToRoute('app_task_list');
     }
