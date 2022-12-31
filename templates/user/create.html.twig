@@ -1,14 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}<h1>Créer un utilisateur</h1>{% endblock %}
-{% block header_img %}{% endblock %}
+{% block header_title %}
+    <h1 class="fw-bolder text-center mt-0 mb-0">Créer un utilisateur</h1>
+{% endblock %}
+
+{% block header_content %}
+    <div class="text-center mt-2">
+        <img class="img-fluid" src="{{ asset('img/todolist_content.jpg') }}" />
+    </div>
+{% endblock %}
 
 {% block body %}
     <div class="row">
-        {{ form_start(form, {'action' : path('user_create')}) }}
+        {% form_theme form 'bootstrap_5_layout.html.twig' %}
+        {{ form_start(form, {'action' : path('app_user_create')}) }}
             {{ form_widget(form) }}
 
-            <button type="submit" class="btn btn-success pull-right">Ajouter</button>
+            <p class="text-center"><button type="submit" class="btn btn-success pull-right">Créer l'utilisateur</button></p>
         {{ form_end(form) }}
     </div>
 {% endblock %}

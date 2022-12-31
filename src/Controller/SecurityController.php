@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="app_login")
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
@@ -24,15 +24,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login_check", name="login_check")
-     */
-    public function loginCheck()
-    {
-        // This code is never executed.
-    }
-
-    /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logoutCheck()
     {
