@@ -7,8 +7,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CreateUserService extends UserHelper
+class ChangePasswordService extends UserHelper
 {
+    protected const ERR_UNABLE_TO_CHANGE_PASSWORD = 
+        "Il n'est pas possible de changer le mot de passe d'un autre utilisateur.";
 
     protected ValidatorInterface $validator;
     protected UserPasswordHasherInterface $pwdHasher;
@@ -28,27 +30,33 @@ class CreateUserService extends UserHelper
     // ============================================================================================
     // ENTRYPOINT
     // ============================================================================================
-    public function createUser(?User $newUser, ?User $authenticatedUser): self
+    public function changePassword(?User $userToUpdate, ?User $authenticatedUser): self
     {
         $this->initHelper();
 
         // Save parameters
         $this->functArgs->set('authenticatedUser', $authenticatedUser);
-        $this->functArgs->set('newUser', $newUser);
+        $this->functArgs->set('userToUpdate', $userToUpdate);
 
-        // Check if the authenticated user is admin
-        if (false === $this->checkUserIsValidAndAdmin($authenticatedUser)) {
+        // Check the authenticated user
+        if (false === $this->checkUser($authenticatedUser)) {
             return $this;
         }
 
-        // Check the new user
-        if (false === $this->checkNewUser($newUser)) {
+        // Check the new value
+        if (false === $this->checkUserToUpdate($userToUpdate)) {
             return $this;
         }
 
-        // Make creation
-        if (false === $this->makeUserCreation()) {
+        // The user can only change the password for their own account
+        if (false === $this->actingUserIsAuthenticatedUser($userToUpdate, $authenticatedUser)) {
+            $this->errMessages->add(self::ERR_UNABLE_TO_CHANGE_PASSWORD);
             return $this;
+        }
+
+        // Make update
+        if (false === $this->makeChange()) {
+            return false;
         }
 
         $this->status = true;
@@ -58,16 +66,15 @@ class CreateUserService extends UserHelper
     // ============================================================================================
     // JOBS
     // ============================================================================================
-    protected function makeUserCreation(): bool
+    protected function makeChange(): bool
     {
-        $this->functArgs->get('newUser')
+        $this->functArgs->get('userToUpdate')
             ->setPassword($this->pwdHasher->hashPassword(
-                $this->functArgs->get('newUser'), 
-                $this->functArgs->get('newUser')->getPassword()))
-            ->setIsActive(true);
+                $this->functArgs->get('userToUpdate'), 
+                $this->functArgs->get('userToUpdate')->getPassword()));
 
         try {
-            $this->manager->persist($this->functArgs->get('newUser'));
+            $this->manager->persist($this->functArgs->get('userToUpdate'));
             $this->manager->flush();
         } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
@@ -83,38 +90,26 @@ class CreateUserService extends UserHelper
     /**
      * Returns false if the user is null or invalid, otherwise returns true.
      */
-    protected function checkNewUser(?User $user): bool
+    protected function checkUserToUpdate(?User $user): bool
     {
         if (null === $user) {
             $this->errMessages->add(self::ERR_UNDEFINED_USER);
             return false;
         }
 
-        /** @var bool $userIsValid */
-        $userIsValid = true;
-
         // Validate user
-        $errors = $this->validator->validate($user, null, ['create']);
+        $errors = $this->validator->validate($user, null, ['changePassword']);
 
         if ($errors->count() > 0) {
-            $userIsValid = false;
-
             // Add errors messages
             foreach ($errors as $error) {
                 $this->errMessages->add($error->getMessage());
             }
-        }
 
-        // Check roles
-        if (empty($user->getRoles())) {
-            $user->setRoles([self::ROLE_USER]);
-        }
-
-        if (false === $this->checkUserRoles($user)) {
             return false;
         }
 
-        return $userIsValid;
+        return true;
     }
 
 }

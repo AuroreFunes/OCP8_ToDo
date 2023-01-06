@@ -61,6 +61,9 @@
                             {% endfor %}
 
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_user_password', {'id': app.user.id}) }}">Profil</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                             </li>
                             {% endif %}

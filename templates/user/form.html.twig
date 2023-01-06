@@ -3,8 +3,10 @@
 {% block header_title %}
     {% if mode == "edit" %}
         <h1 class="fw-bolder text-center mt-0 mb-0">Modifier <strong>"{{ user.username }}"</strong></h1>
-    {% else %}
+    {% elseif mode == "update" %}
         <h1 class="fw-bolder text-center mt-0 mb-0">Créer un utilisateur</h1>
+    {% else %}
+        <h1 class="fw-bolder text-center mt-0 mb-0">Changer le mot de passe</h1>
     {% endif %}
 {% endblock %}
 

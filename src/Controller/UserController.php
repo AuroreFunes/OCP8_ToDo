@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\CreateUserType;
 use App\Form\EditUserType;
+use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
+use App\Service\User\ChangePasswordService;
 use App\Service\User\CreateUserService;
 use App\Service\User\DeleteUserService;
 use App\Service\User\EditUserService;
@@ -60,6 +62,11 @@ class UserController extends AbstractController
      */
     public function editAction(?User $user, Request $request, EditUserService $service)
     {
+        if (null === $user) {
+            $this->addFlash('error', "L'utilisateur n'a pas été trouvé.");
+            return $this->redirectToRoute('app_user_list');
+        }
+
         $form = $this->createForm(EditUserType::class, $user);
 
         $form->handleRequest($request);
@@ -82,6 +89,11 @@ class UserController extends AbstractController
      */
     public function deleteAction(?User $user, DeleteUserService $service)
     {
+        if (null === $user) {
+            $this->addFlash('error', "L'utilisateur n'a pas été trouvé.");
+            return $this->redirectToRoute('app_user_list');
+        }
+
         $service->deleteUser($user, $this->getUser());
 
             if (true === $service->getStatus()) {
@@ -97,4 +109,42 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_list');
     }
 
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/users/{id}/changePassword", name="app_user_password")
+     */
+    public function changePasswordAction(?User $user, Request $request, ChangePasswordService $service)
+    {
+
+        if (null === $user) {
+            $this->addFlash('error', "L'utilisateur n'a pas été trouvé.");
+            return $this->redirectToRoute('app_home');
+        }
+
+        // The user can only change the password for their own account
+        if ($user !== $this->getUser()) {
+            $this->addFlash('error', "Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur.");
+            return $this->redirectToRoute('app_home');
+        }
+
+        $form = $this->createForm(UserPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $service->changePassword($user, $this->getUser());
+
+            if (true === $service->getStatus()) {
+                $this->addFlash('success', "Le mot de passe a été changé.");
+                return $this->redirectToRoute('app_home');
+            }
+
+            // status = false !
+            foreach ($service->getErrorsMessages() as $message) {
+                $this->addFlash('error', $message);
+            }
+        }
+
+        return $this->render('user/form.html.twig', ['form' => $form->createView(), 'user' => $user, 'mode' => "changePassword"]);
+    }
 }
