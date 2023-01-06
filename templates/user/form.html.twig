@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block header_title %}
+    {% if mode == "edit" %}
+        <h1 class="fw-bolder text-center mt-0 mb-0">Modifier <strong>"{{ user.username }}"</strong></h1>
+    {% else %}
+        <h1 class="fw-bolder text-center mt-0 mb-0">Créer un utilisateur</h1>
+    {% endif %}
+{% endblock %}
+
+{% block header_content %}
+    <div class="text-center mt-2">
+        <img class="img-fluid" src="{{ asset('img/todolist_content.jpg') }}" />
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% form_theme form 'bootstrap_5_layout.html.twig' %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <p class="text-center"><button type="submit" class="btn btn-success pull-right">
+            {% if mode == "create" %}Créer l'utilisateur
+            {% else %}Appliquer les modifications
+            {% endif %}
+        </button></p>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

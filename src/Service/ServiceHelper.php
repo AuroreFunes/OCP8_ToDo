@@ -11,6 +11,7 @@ abstract class ServiceHelper {
 
     // PARAMETERS
     protected const USER_ROLES_AVALIABLE = ['ROLE_USER', 'ROLE_ADMIN'];
+    protected const ROLE_USER  = self::USER_ROLES_AVALIABLE[0];
     protected const ROLE_ADMIN = self::USER_ROLES_AVALIABLE[1];
 
     // DEPENDENCIES
@@ -36,7 +37,7 @@ abstract class ServiceHelper {
 
     protected function initHelper(): void
     {
-        $this->status   = false;
+        $this->status       = false;
         $this->functArgs    = new ArrayCollection();
         $this->functResult  = new ArrayCollection();
         $this->errMessages  = new ArrayCollection();
@@ -45,6 +46,9 @@ abstract class ServiceHelper {
     // ============================================================================================
     // CHECKING JOBS
     // ============================================================================================
+    /**
+     * Returns false if the user is null or inactive, otherwise returns true
+     */
     protected function checkUser(?User $user)
     {
         if (null === $user) {
@@ -60,9 +64,42 @@ abstract class ServiceHelper {
         return true;
     }
 
+    /**
+     * Returns true if the user has the administrator role, otherwise returns false
+     */
     protected function userIsAdmin(User $user): bool
     {
         return in_array(self::ROLE_ADMIN, $user->getRoles());
+    }
+
+    /**
+     * Checks if the user is valid, then if it has the administrator role and returns true, 
+     * otherwise returns false.
+     */
+    protected function checkUserIsValidAndAdmin(?User $user): bool
+    {
+        if (false === $this->checkUser($user)) {
+            return false;
+        }
+
+        if (false === $this->userIsAdmin($user)) {
+            $this->errMessages->add(self::ERR_USER_IN_NOT_ADMIN);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if the two users passed in parameter are the same entity. Otherwise returns false.
+     */
+    protected function actingUserIsAuthenticatedUser(User $actingUser, User $authenticatedUser): bool
+    {
+        if ($actingUser->getId() !== $authenticatedUser->getId()) {
+            return false;
+        }
+
+        return true;
     }
 
     // ============================================================================================

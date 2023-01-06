@@ -10,15 +10,15 @@
     </div>
 {% endblock %}
 
-
 {% block body %}
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('app_user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+            Il n'y a pas encore d'utilisateur enregistré. 
+            <a href="{{ path('app_user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="row">
-            <table class="table">
+            <table id="usersTable" class="table table-hover">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -29,17 +29,50 @@
                 </thead>
                 <tbody>
                 {% for user in users %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <a href="{{ path('app_user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
-                        </td>
-                    </tr>
+                    {% if user.username != "Anonymous" %}
+                        <tr>
+                            <th scope="row">{{ user.id }}</th>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <a href="{{ path('app_user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Modifier</a>
+                                {% if user.id != app.user.id %}
+                                    <a href="{{ path('app_user_delete', {'id' : user.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     {% endif %}
+{% endblock %}
+
+{# DataTable for pagination #}
+{% block style %}
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+{% endblock %}
+{% block javaScript %}
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#usersTable').dataTable( {
+                "pageLength": 25,
+                "language": {
+                    "lengthMenu": "Montrer _MENU_ lignes",
+                    "search": "Chercher :",
+                    "zeroRecords": "Aucune donnée n'a été trouvée",
+                    "info": "Page _PAGE_ / _PAGES_",
+                    "infoEmpty": "Aucune donnée à afficher",
+                    "paginate": {
+                        "first":      "Début",
+                        "last":       "Fin",
+                        "next":       ">",
+                        "previous":   "<"
+                    }
+                }
+            } );
+        });
+    </script>
 {% endblock %}
