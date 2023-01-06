@@ -14,6 +14,11 @@ class SecurityController extends AbstractController
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
+        if (null !== $this->getUser()) {
+            $this->addFlash('error', "Vous êtes déjà authentifié.");
+            return $this->redirectToRoute('app_home');
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 

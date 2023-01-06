@@ -48,8 +48,23 @@ class AppFixtures extends Fixture
             ->setIsActive(true);
         $manager->persist($user);
 
+        // other users
+        $userTab = [];
+        for ($i = 0; $i < 4; $i++) {
+            $otherUser = new User();
+            $otherUser
+                ->setUsername('User ' . $i + 1)
+                ->setEmail('user' . $i + 1 . '@todo.co')
+                ->setPassword($this->pwdHasher->hashPassword($otherUser, "Abcd1234"))
+                ->setRoles(['ROLE_USER'])
+                ->setIsActive(true);
+            $manager->persist($otherUser);
+
+            $userTab[] = $otherUser;
+        }
+
         // tasks creation
-        for ($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i < 20; $i++) {
             $task = new Task();
             $task
                 ->setTitle('Titre tâche n° ' . $i)
@@ -64,8 +79,11 @@ class AppFixtures extends Fixture
             elseif ($i < 8) {
                 $task->setAuthor($admin);
             }
-            else {
+            elseif ($i < 10) {
                 $task->setAuthor($user);
+            }
+            else {
+                $task->setAuthor($userTab[$i % 4]);
             }
 
             $manager->persist($task);

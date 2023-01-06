@@ -10,6 +10,7 @@ use App\Service\Task\DeleteTaskService;
 use App\Service\Task\EditTaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,6 +20,7 @@ class TaskController extends AbstractController
     private const ERR_AUTHENTICATION_REQUIRED = "Vous devez être authentifié pour accéder à cette fonctionnalité.";
 
     /**
+     * @IsGranted("ROLE_USER")
      * @Route("/tasks", name="app_task_list")
      */
     public function listAction(TaskRepository $taskRepository)
@@ -32,6 +34,7 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_USER")
      * @Route("/tasks/create", name="app_task_create")
      */
     public function createAction(Request $request, CreateTaskService $service)
@@ -65,6 +68,7 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_USER")
      * @Route("/tasks/{id}/edit", name="app_task_edit")
      */
     public function editAction(?Task $task, Request $request, EditTaskService $service)
@@ -83,7 +87,7 @@ class TaskController extends AbstractController
         // OR if the user is the author of the task
         if (!(
             ($task->getAuthor()->getUserIdentifier() === "Anonymous" 
-                && in_array("ROLE_ADMIN", $this->getUser()->getRoles()))
+                && !$this->isGranted('ROLE_ADMIN'))
             || $task->getAuthor() === $this->getUser()
         )) {
             $this->addFlash('error', 'Vous ne pouvez pas effectuer cette action');
@@ -116,6 +120,7 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_USER")
      * @Route("/tasks/{id}/toggle", name="app_task_toggle")
      */
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)
@@ -131,6 +136,7 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_USER")
      * @Route("/tasks/{id}/delete", name="app_task_delete")
      */
     public function deleteTaskAction(Task $task, DeleteTaskService $service)
