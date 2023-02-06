@@ -57,8 +57,7 @@ class CreateTaskService extends TaskHelper {
             ->setIsDone(false);
 
         try {
-            $this->manager->persist($this->functArgs->get('task'));
-            $this->manager->flush();
+            $this->manager->getRepository(Task::class)->add($this->functArgs->get('task'), true);
         } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
             return false;

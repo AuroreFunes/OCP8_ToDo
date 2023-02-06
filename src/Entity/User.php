@@ -6,11 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -89,9 +89,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="actor")
+     */
+    private $linkedTasks;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->linkedTasks = new ArrayCollection();
     }
 
 
@@ -232,6 +238,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getLinkedTasks(): Collection
+    {
+        return $this->linkedTasks;
+    }
+
+    public function addLinkedTask(Task $linkedTask): self
+    {
+        if (!$this->linkedTasks->contains($linkedTask)) {
+            $this->linkedTasks[] = $linkedTask;
+            $linkedTask->setActor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkedTask(Task $linkedTask): self
+    {
+        if ($this->linkedTasks->removeElement($linkedTask)) {
+            // set the owning side to null (unless already changed)
+            if ($linkedTask->getActor() === $this) {
+                $linkedTask->setActor(null);
+            }
+        }
+
+        return $this;
     }
 
 }

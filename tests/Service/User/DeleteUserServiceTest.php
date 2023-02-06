@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\User;
+namespace App\Test\Service\User;
 
 use App\Entity\User;
 use App\Service\User\DeleteUserService;
@@ -67,10 +67,12 @@ class DeleteUserServiceTest extends KernelTestCase
 
         $oldUsername = $userToDelete->getUserIdentifier();
         $userTaskNb = count($userToDelete->getTasks());
+        $userLinkedTasks = $userToDelete->getLinkedTasks();
         $anonymousTaskNb = count($this->anonymous->getTasks());
 
         // run service
         $this->service->deleteUser($userToDelete, $this->admin);
+        $this->entityManager->close();
 
         // check status
         $this->assertTrue($this->service->getStatus());
@@ -85,8 +87,12 @@ class DeleteUserServiceTest extends KernelTestCase
         $deletedUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $oldUsername]);
         $this->assertNull($deletedUser);
         
-        // No changes have been made
+        // check tasks
         $this->assertCount($anonymousTaskNb + $userTaskNb, $this->anonymous->getTasks());
+
+        foreach ($userLinkedTasks as $task) {
+            $this->assertNull($task->getActor());
+        }
     }
 
     /**
@@ -109,6 +115,7 @@ class DeleteUserServiceTest extends KernelTestCase
         unset($users);
 
         $userTaskNb = count($userToDelete->getTasks());
+        $userLinkedTaskNb = count($userToDelete->getLinkedTasks());
         $anonymousTaskNb = count($this->anonymous->getTasks());
 
         // run service
@@ -133,6 +140,7 @@ class DeleteUserServiceTest extends KernelTestCase
         // No changes have been made
         $this->assertCount($userTaskNb, $userNotDelete->getTasks());
         $this->assertCount($anonymousTaskNb, $this->anonymous->getTasks());
+        $this->assertCount($userLinkedTaskNb, $userNotDelete->getLinkedTasks());
     }
 
 
@@ -156,6 +164,7 @@ class DeleteUserServiceTest extends KernelTestCase
         unset($users);
 
         $userTaskNb = count($userToDelete->getTasks());
+        $userLinkedTaskNb = count($userToDelete->getLinkedTasks());
         $anonymousTaskNb = count($this->anonymous->getTasks());
 
         // run service
@@ -180,6 +189,7 @@ class DeleteUserServiceTest extends KernelTestCase
         // No changes have been made
         $this->assertCount($userTaskNb, $userNotDelete->getTasks());
         $this->assertCount($anonymousTaskNb, $this->anonymous->getTasks());
+        $this->assertCount($userLinkedTaskNb, $userNotDelete->getLinkedTasks());
     }
 
     /**
@@ -202,6 +212,7 @@ class DeleteUserServiceTest extends KernelTestCase
         unset($users);
 
         $userTaskNb = count($userToDelete->getTasks());
+        $userLinkedTaskNb = count($userToDelete->getLinkedTasks());
         $anonymousTaskNb = count($this->anonymous->getTasks());
 
         // run service
@@ -226,6 +237,7 @@ class DeleteUserServiceTest extends KernelTestCase
         // No changes have been made
         $this->assertCount($userTaskNb, $userNotDelete->getTasks());
         $this->assertCount($anonymousTaskNb, $this->anonymous->getTasks());
+        $this->assertCount($userLinkedTaskNb, $userNotDelete->getLinkedTasks());
     }
 
     /**
@@ -281,7 +293,7 @@ class DeleteUserServiceTest extends KernelTestCase
     }
 
     /**
-     * Test KO : an admin tries to delete our own account
+     * Test KO : an admin tries to delete Anonymous user
      */
     public function testDeleteUserKoAnonymous()
     {

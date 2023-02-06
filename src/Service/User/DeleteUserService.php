@@ -71,10 +71,15 @@ class DeleteUserService extends UserHelper
         }
         $this->manager->persist($anonymous);
 
+        // Remove actor
+        foreach ($this->functArgs->get('userToDeleted')->getLinkedTasks() as $task) {
+            /** @var Task $task */
+            $task->setActor(null);
+        }
+
         // Delete the user
         try {
-            $this->manager->remove($this->functArgs->get('userToDeleted'));
-            $this->manager->flush();
+            $this->manager->getRepository(User::class)->remove($this->functArgs->get('userToDeleted'), true);
         } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
             return false;

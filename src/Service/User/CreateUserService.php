@@ -67,8 +67,7 @@ class CreateUserService extends UserHelper
             ->setIsActive(true);
 
         try {
-            $this->manager->persist($this->functArgs->get('newUser'));
-            $this->manager->flush();
+            $this->manager->getRepository(User::class)->add($this->functArgs->get('newUser'), true);
         } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
             return false;

@@ -7,7 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
 
-abstract class ServiceHelper {
+abstract class ServiceHelper
+{
 
     // PARAMETERS
     protected const USER_ROLES_AVALIABLE = ['ROLE_USER', 'ROLE_ADMIN'];
@@ -56,8 +57,20 @@ abstract class ServiceHelper {
             return false;
         }
 
-        if (false === $user->isActive()) {
+        if (false === $this->userIsActive($user)) {
             $this->errMessages->add(self::ERR_INACTIVE_USER);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if the user is active, otherwise returns false
+     */
+    protected function userIsActive(User $user): bool
+    {
+        if (false === $user->isActive()) {
             return false;
         }
 
@@ -110,15 +123,15 @@ abstract class ServiceHelper {
         return $this->status;
     }
 
-    public function getArguments()
-    {
-        return $this->functArgs;
-    }
+//    public function getArguments()
+//    {
+//        return $this->functArgs;
+//    }
 
-    public function getResult()
-    {
-        return $this->functResult;
-    }
+//    public function getResult()
+//    {
+//        return $this->functResult;
+//    }
 
     public function getErrorsMessages()
     {

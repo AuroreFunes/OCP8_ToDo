@@ -7,7 +7,9 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DeleteTaskService extends TaskHelper {
+class SetTaskProgressService extends TaskHelper
+{
+    private const ERR_INVALID_PROGRESS = "La progression doit être exprimée en pourcentage.";
 
     public function __construct(ManagerRegistry $manager, ValidatorInterface $validator)
     {
@@ -17,13 +19,14 @@ class DeleteTaskService extends TaskHelper {
     // ============================================================================================
     // ENTRYPOINT
     // ============================================================================================
-    public function deleteTask(?Task $task, ?User $user): self
+    public function setProgress(?Task $task, ?User $user, int $progress): self
     {
         $this->initHelper();
 
         // Save parameters
         $this->functArgs->set('user', $user);
         $this->functArgs->set('task', $task);
+        $this->functArgs->set('progress', $progress);
 
         // Check the user
         if (false === $this->checkUser($user)) {
@@ -31,34 +34,43 @@ class DeleteTaskService extends TaskHelper {
         }
 
         // Check the task
-        if (false === $this->checkTaskIsNotEmpty($task)) {
+        if (false === $this->checkTask($task)) {
             return $this;
         }
 
-        // Check the owner of the task (or if the user is an administrator)
-        if (false === $this->checkTaskOwner($user, $task)) {
+        // Check the actor of the task
+        if (false === $this->checkTaskActor($user, $task)) {
+            $this->errMessages->add(self::ERR_USER_IS_NOT_ACTOR);
             return $this;
         }
 
-        // Make delete
-        if (false === $this->makeTaskDelete()) {
+        // Check the progress
+        if (false === $this->checkParameters()) {
+            return $this;
+        }
+
+        // Make update
+        if (false === $this->makeTaskUpdate()) {
             return false;
         }
 
         $this->status = true;
         return $this;
-
     }
 
     // ============================================================================================
     // JOBS
     // ============================================================================================
-    protected function makeTaskDelete(): bool
+    protected function makeTaskUpdate(): bool
     {
+        $this->functArgs->get('task')
+            ->setProgress($this->functArgs->get('progress'))
+            ->setUpdatedAt(new \DateTime());
+
         try {
-            $this->manager->getRepository(Task::class)->remove($this->functArgs->get('task'), true);
-        }
-        catch (\Exception $e) {
+            $this->manager->persist($this->functArgs->get('task'));
+            $this->manager->flush();
+        } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
             return false;
         }
@@ -66,20 +78,20 @@ class DeleteTaskService extends TaskHelper {
         return true;
     }
 
-
-
     // ============================================================================================
-    // CHECKING JOBS
+    // CHECK PARAMETERS
     // ============================================================================================
-    protected function checkTaskIsNotEmpty(?Task $task): bool
+    protected function checkParameters()
     {
-        if (null === $task) {
-            $this->errMessages->add(self::ERR_TASK_NOT_FOUND);
+        if (false === filter_var($this->functArgs->get('progress'), FILTER_VALIDATE_INT, ['options' => [
+            'min_range' => 0,
+            'max_range' => 100
+        ]])) {
+            $this->errMessages->add(self::ERR_INVALID_PROGRESS);
             return false;
         }
 
         return true;
     }
-
 
 }

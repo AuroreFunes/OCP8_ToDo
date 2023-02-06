@@ -71,8 +71,10 @@ class AppFixtures extends Fixture
                 ->setContent('Description de la tâche ' . $i)
                 ->setCreatedAt(new \DateTime())
                 ->toggle(false)
-                ->setAuthor($anonymous);
-            
+                ->setAuthor($anonymous)
+                ->setProgress(rand(0, 100))
+                ->setActor($userTab[array_rand($userTab)]);
+
             if ($i < 6) {
                 $task->setAuthor($anonymous);
             }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,17 @@ class TaskRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findTasksByUser(User $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.author = :user')
+            ->orWhere('t.actor = :user')
+            ->setParameter('user', $user)
+            ->orderBy('t.deadLine', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

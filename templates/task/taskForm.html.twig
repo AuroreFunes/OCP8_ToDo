@@ -33,6 +33,27 @@
                 }})
             }}
 
+            {{ form_row(form.actor, {
+                'label': "Acteur de la tâche",
+                'attr': {
+                    'placeholder': "Choisissez qui doit réaliser la tâche"
+                }})
+            }}
+
+            {{ form_row(form.progress, {
+                'label': "Progression de la tâche (en %)",
+                'attr': {
+                    'placeholder': "Choisissez le % de progression"
+                }})
+            }}
+
+            {{ form_row(form.deadLine, {
+                'label': "Dead line de la tâche",
+                'attr': {
+                    'placeholder': "Date de réalisation maximale"
+                }})
+            }}
+
             <p class="text-center">
                 <button type="submit" class="btn btn-success pull-right">
                     {% if mode == "create" %}Créer la tâche
