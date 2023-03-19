@@ -80,6 +80,10 @@ class AppFixtures extends Fixture
             }
             elseif ($i < 8) {
                 $task->setAuthor($admin);
+
+                if ($i === 7) {
+                    $task->setActor($user);
+                }
             }
             elseif ($i < 10) {
                 $task->setAuthor($user);

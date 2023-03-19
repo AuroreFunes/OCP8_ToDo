@@ -61,8 +61,6 @@ class TaskController extends AbstractController
      */
     public function listClosedAction(TaskRepository $taskRepository)
     {
-
-
         $task = $taskRepository->findBy(['isDone' => true]);
 
         return $this->render('task/list.html.twig', [
@@ -75,16 +73,13 @@ class TaskController extends AbstractController
      * @IsGranted("ROLE_USER")
      * @Route("/tasks/create", name="app_task_create")
      */
-    public function createAction(Request $request, CreateTaskService $service)
+    public function createTaskAction(Request $request, CreateTaskService $service)
     {
-
-
         $task = new Task();
         // By default, the task actor is the author
         $task->setActor($this->getUser());
 
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,7 +108,6 @@ class TaskController extends AbstractController
      */
     public function editAction(?Task $task, Request $request, EditTaskService $service)
     {
-
 
         if (null === $task) {
             $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");
@@ -175,15 +169,10 @@ class TaskController extends AbstractController
      * @IsGranted("ROLE_USER")
      * @Route("/tasks/{id}/delete", name="app_task_delete")
      */
-    public function deleteTaskAction(Task $task, DeleteTaskService $service)
+    public function deleteTaskAction(?Task $task, DeleteTaskService $service)
     {
-        if (null === $this->getUser()) {
-            $this->addFlash('error', self::ERR_AUTHENTICATION_REQUIRED);
-            return $this->redirectToRoute('app_home');
-        }
-
         if (null === $task) {
-            $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");dd('oups');
+            $this->addFlash('error', "La tâche demandée n'a pas été trouvée.");
             return $this->redirectToRoute('app_task_list');
         }
 

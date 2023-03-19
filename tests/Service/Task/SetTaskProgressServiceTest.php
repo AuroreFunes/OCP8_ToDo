@@ -103,7 +103,7 @@ class SetTaskProgressServiceTest extends KernelTestCase
         /** @var Task $taskToModify */
         foreach ($tasks as $task) {
             /** @var Task $task */
-            if ($task->getAuthor() !== $this->user) {
+            if ($task->getAuthor() !== $this->user && $task->getActor() == $this->user) {
                 $taskToModify = $task;
                 break;
             }
