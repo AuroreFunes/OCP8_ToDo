@@ -211,7 +211,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/deleteTask/", name="xhr_task_delete")
      */
-    public function xhrDeleteTrick(
+    public function xhrDeleteTask(
         Request $request,
         TaskRepository $taskRepository,
         DeleteTaskService $service

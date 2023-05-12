@@ -171,6 +171,23 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success','La tâche a été bien été supprimée.');
     }
 
+    // ============================================================================================
+    // XHR
+    // ============================================================================================
+    public function testXhrDeleteTask()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
 
+        /** @var Task $lastTask */
+        $lastTask = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        //$crawler = $this->client->xmlHttpRequest('POST', '/deleteTask', ['id' => $lastTask->getId()]);
+        $crawler = $this->client->xmlHttpRequest('POST', '/deleteTask', []);
+
+        //$this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseIsSuccessful();
+
+    }
 
 }
