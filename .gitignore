@@ -22,5 +22,5 @@
 ###< symfony/phpunit-bridge ###
 
 ###> Test coverage ###
-/public/test-coverage
+#/public/test-coverage
 ###< Test coverage ###

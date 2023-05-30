@@ -109,6 +109,19 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success',"L'utilisateur a bien été modifié");
     }
 
+    public function testEditUserActioWithUserNotFound()
+    {
+        // authenticate User
+        $this->client->loginUser($this->admin);
+
+        $crawler = $this->client->request(Request::METHOD_GET, '/users/-1/edit');
+        
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('div.alert.alert-danger',"L'utilisateur n'a pas été trouvé.");
+    }
+
     public function testDeleteUserAction()
     {
         // authenticate User
@@ -125,6 +138,19 @@ class UserControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success',"L'utilisateur a bien été supprimé.");
+    }
+
+    public function testDeleteUserActionWithUserNotFound()
+    {
+        // authenticate User
+        $this->client->loginUser($this->admin);
+
+        $crawler = $this->client->request(Request::METHOD_GET, '/users/-1/delete');
+
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('div.alert.alert-danger',"L'utilisateur n'a pas été trouvé.");
     }
 
     public function testChangePasswordAction()
@@ -155,6 +181,18 @@ class UserControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-danger',"Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur.");
+    }
+
+    public function testChangePasswordActionWithUserNotFound()
+    {
+        // authenticate User
+        $this->client->loginUser($this->admin);
+
+        $crawler = $this->client->request(Request::METHOD_GET, '/users/-1/changePassword');
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('div.alert.alert-danger',"L'utilisateur n'a pas été trouvé.");
     }
 
 }

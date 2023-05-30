@@ -171,6 +171,34 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success','La tâche a été bien été supprimée.');
     }
 
+    public function testDeleteTaskActionTaskNull()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        $crawler = $this->client->request(Request::METHOD_GET, '/tasks/-1/delete');
+
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('div.alert.alert-danger',"La tâche demandée n'a pas été trouvée.");
+    }
+
+    public function testDeleteTaskActionWrongAuthor()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        /** @var Task $lastTask */
+        $lastTask = $this->admin->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        $crawler = $this->client->request(Request::METHOD_GET, '/tasks/' . $lastTask->getId() . '/delete');
+
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
     // ============================================================================================
     // XHR
     // ============================================================================================
@@ -182,12 +210,104 @@ class TaskControllerTest extends WebTestCase
         /** @var Task $lastTask */
         $lastTask = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
 
-        //$crawler = $this->client->xmlHttpRequest('POST', '/deleteTask', ['id' => $lastTask->getId()]);
-        $crawler = $this->client->xmlHttpRequest('POST', '/deleteTask', []);
+        $crawler = $this->client->xmlHttpRequest('POST', '/deleteTask/', ['id' => $lastTask->getId()]);
 
-        //$this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertResponseIsSuccessful();
+    }
 
+    public function testXhrDeleteTaskIdEmpty()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/deleteTask/');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function testXhrDeleteTaskUnauthorised()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        /** @var Task $lastTask */
+        $lastTask = $this->admin->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/deleteTask/', ['id' => $lastTask->getId()]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+    }
+
+    public function testXhrSetProgressAction()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        /** @var Task $lastTask */
+        $lastTask = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        // progress
+        $newProgress = rand(1, 100);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/tasks/progress', [
+            'id' => $lastTask->getId(),
+            'progress' => $newProgress
+        ]);
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testXhrSetProgressActionWithInvalidProgress()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        /** @var Task $lastTask */
+        $lastTask = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/tasks/progress', [
+            'id' => $lastTask->getId(),
+            'progress' => -1
+        ]);
+
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testXhrSetProgressActionIdEmpty()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/tasks/progress');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function testXhrSetProgressActionTaskNotFound()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/tasks/progress', [
+            'id' => -1
+        ]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+    }
+
+    public function testXhrSetProgressActionProgressEmpty()
+    {
+        // authenticate User
+        $this->client->loginUser($this->user);
+
+        /** @var Task $lastTask */
+        $lastTask = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
+
+        $crawler = $this->client->xmlHttpRequest('POST', '/tasks/progress', [
+            'id' => $lastTask->getId()
+        ]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 
 }
