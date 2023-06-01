@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\Task;
+namespace App\Test\Service\Task;
 
 use App\Entity\Task;
 use App\Entity\User;
@@ -57,14 +57,18 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $newProgress = rand(0, 100);
 
         // new value for task
         $taskToModify
             ->setTitle("Modified title " . $this->uniqid)
-            ->setContent("Modified content " . $this->uniqid);
+            ->setContent("Modified content " . $this->uniqid)
+            ->setProgress($newProgress);
 
         // run service
         $this->service->editTask($taskToModify, $this->user);
+        // close the manager to reload the entities
+        $this->entityManager->close();
 
         // check status
         $this->assertTrue($this->service->getStatus());
@@ -81,11 +85,16 @@ class EditTaskServiceTest extends KernelTestCase
         // it is the same entity
         $this->assertEquals($taskToModify->getId(), $oldId);
         // the title has been modified
+        $this->assertNull($this->entityManager->getRepository(Task::class)->findOneBy(['title' => $oldTitle]));
         $this->assertEquals("Modified title " . $this->uniqid, $modifiedTask->getTitle());
         // the content has been modified
         $this->assertEquals("Modified content " . $this->uniqid, $modifiedTask->getContent());
-
-        $this->assertNull($this->entityManager->getRepository(Task::class)->findOneBy(['title' => $oldTitle]));
+        // the progress has been modified
+        $this->assertSame($newProgress, $modifiedTask->getProgress());
+        // the created date has NOT been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $modifiedTask->getCreatedAt());
+        // the updated date has been modified
+        $this->assertNotEquals($taskToModify->getUpdatedAt(), $modifiedTask->getUpdatedAt());
     }
 
     /**
@@ -100,14 +109,17 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->anonymous->getTasks()->get(count($this->anonymous->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $newProgress = rand(0, 100);
 
         // new value for task
         $taskToModify
             ->setTitle("Still modified title " . $this->uniqid)
-            ->setContent("Still modified content " . $this->uniqid);
+            ->setContent("Still modified content " . $this->uniqid)
+            ->setProgress($newProgress);
 
         // run service
         $this->service->editTask($taskToModify, $this->admin);
+        $this->entityManager->close();
 
         // check status
         $this->assertTrue($this->service->getStatus());
@@ -122,13 +134,18 @@ class EditTaskServiceTest extends KernelTestCase
         /** @var Task $modifiedTask */
         $modifiedTask = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => "Still modified title " . $this->uniqid]);
         // it is the same entity
-        $this->assertEquals($taskToModify->getId(), $oldId);
+        $this->assertEquals($modifiedTask->getId(), $oldId);
         // the title has been modified
+        $this->assertNull($this->entityManager->getRepository(Task::class)->findOneBy(['title' => $oldTitle]));
         $this->assertEquals("Still modified title " . $this->uniqid, $modifiedTask->getTitle());
         // the content has been modified
         $this->assertEquals("Still modified content " . $this->uniqid, $modifiedTask->getContent());
-
-        $this->assertNull($this->entityManager->getRepository(Task::class)->findOneBy(['title' => $oldTitle]));
+        // the progress has been modified
+        $this->assertSame($newProgress, $modifiedTask->getProgress());
+        // the created date has NOT been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $modifiedTask->getCreatedAt());
+        // the updated date has been modified
+        $this->assertNotEquals($taskToModify->getUpdatedAt(), $modifiedTask->getUpdatedAt());
     }
 
     /**
@@ -143,11 +160,13 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->anonymous->getTasks()->get(count($this->anonymous->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $oldProgress = $taskToModify->getProgress();
 
         // new value for task
         $taskToModify
             ->setTitle("Forbidden " . $this->uniqid)
-            ->setContent("Forbidden " . $this->uniqid);
+            ->setContent("Forbidden " . $this->uniqid)
+            ->setProgress(rand(0,100));
 
         // run service
         $this->service->editTask($taskToModify, $this->anonymous);
@@ -169,6 +188,12 @@ class EditTaskServiceTest extends KernelTestCase
         $unchangedTask = $this->entityManager->getRepository(Task::class)->find($oldId);
         // the title has not been modified
         $this->assertEquals($oldTitle, $unchangedTask->getTitle());
+        // the progress has not been modified
+        $this->assertSame($oldProgress, $unchangedTask->getProgress());
+        // the created date has not been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $unchangedTask->getCreatedAt());
+        // the updated date has not been modified
+        $this->assertEquals($taskToModify->getUpdatedAt(), $unchangedTask->getUpdatedAt());
     }
 
     /**
@@ -183,11 +208,13 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->anonymous->getTasks()->get(count($this->anonymous->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $oldProgress = $taskToModify->getProgress();
 
         // new value for task
         $taskToModify
             ->setTitle("Forbidden " . $this->uniqid)
-            ->setContent("Forbidden " . $this->uniqid);
+            ->setContent("Forbidden " . $this->uniqid)
+            ->setProgress(rand(0,100));
 
         // run service
         $this->service->editTask($taskToModify, $this->user);
@@ -209,6 +236,12 @@ class EditTaskServiceTest extends KernelTestCase
         $unchangedTask = $this->entityManager->getRepository(Task::class)->find($oldId);
         // the title has not been modified
         $this->assertEquals($oldTitle, $unchangedTask->getTitle());
+        // the progress has not been modified
+        $this->assertSame($oldProgress, $unchangedTask->getProgress());
+        // the created date has not been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $unchangedTask->getCreatedAt());
+        // the updated date has not been modified
+        $this->assertEquals($taskToModify->getUpdatedAt(), $unchangedTask->getUpdatedAt());
     }
 
     /**
@@ -223,11 +256,13 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $oldProgress = $taskToModify->getProgress();
 
         // new value for task
         $taskToModify
             ->setTitle("Forbidden " . $this->uniqid)
-            ->setContent("Forbidden " . $this->uniqid);
+            ->setContent("Forbidden " . $this->uniqid)
+            ->setProgress(rand(0, 100));
 
         // run service
         $this->service->editTask($taskToModify, null);
@@ -249,6 +284,12 @@ class EditTaskServiceTest extends KernelTestCase
         $unchangedTask = $this->entityManager->getRepository(Task::class)->find($oldId);
         // the title has not been modified
         $this->assertEquals($oldTitle, $unchangedTask->getTitle());
+        // the progress has not been modified
+        $this->assertSame($oldProgress, $unchangedTask->getProgress());
+        // the created date has not been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $unchangedTask->getCreatedAt());
+        // the updated date has not been modified
+        $this->assertEquals($taskToModify->getUpdatedAt(), $unchangedTask->getUpdatedAt());
     }
 
     /**
@@ -263,11 +304,13 @@ class EditTaskServiceTest extends KernelTestCase
         $taskToModify = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
         $oldTitle = $taskToModify->getTitle();
         $oldId = $taskToModify->getId();
+        $oldProgress = $taskToModify->getProgress();
 
         // new value for task
         $taskToModify
             ->setTitle("Forbidden " . $this->uniqid)
-            ->setContent("Forbidden " . $this->uniqid);
+            ->setContent("Forbidden " . $this->uniqid)
+            ->setProgress(rand(0, 100));
 
         // run service
         $this->service->editTask($taskToModify, $this->admin);
@@ -289,6 +332,12 @@ class EditTaskServiceTest extends KernelTestCase
         $unchangedTask = $this->entityManager->getRepository(Task::class)->find($oldId);
         // the title has not been modified
         $this->assertEquals($oldTitle, $unchangedTask->getTitle());
+        // the progress has not been modified
+        $this->assertSame($oldProgress, $unchangedTask->getProgress());
+        // the created date has not been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $unchangedTask->getCreatedAt());
+        // the updated date has not been modified
+        $this->assertEquals($taskToModify->getUpdatedAt(), $unchangedTask->getUpdatedAt());
     }
 
     /**
@@ -317,6 +366,58 @@ class EditTaskServiceTest extends KernelTestCase
 
         // check result
         $this->assertCount($taskNb, $this->entityManager->getRepository(Task::class)->findAll());
+    }
+
+    /**
+     * Case KO: invalid datas
+     */
+    public function testKoInvalidDatas()
+    {
+        // init before run
+        $taskNb = count($this->entityManager->getRepository(Task::class)->findAll());
+
+        /** @var Task $taskToModify */
+        $taskToModify = $this->user->getTasks()->get(count($this->user->getTasks()) - 1);
+        $oldTitle = $taskToModify->getTitle();
+        $oldId = $taskToModify->getId();
+        $oldProgress = $taskToModify->getProgress();
+
+        // new value for task
+        $taskToModify
+            ->setTitle("F")
+            ->setContent("")
+            ->setProgress(101)
+            ->setActor($this->anonymous);
+
+        // run service
+        $this->service->editTask($taskToModify, $this->admin);
+        $this->entityManager->close();
+
+        // check status
+        $this->assertFalse($this->service->getStatus());
+
+        // count errors
+        $this->assertCount(4, $this->service->getErrorsMessages());
+
+        // read errors
+        $this->assertEquals("Le titre doit contenir au moins deux caractères.", $this->service->getErrorsMessages()->get(0));
+        $this->assertEquals("Vous devez saisir du contenu.", $this->service->getErrorsMessages()->get(1));
+        $this->assertEquals("La progression de la tâche doit être entre 0 et 100 %.", $this->service->getErrorsMessages()->get(2));
+        $this->assertEquals("La tâche ne peut pas être affectée à un utilisateur inactif.", $this->service->getErrorsMessages()->get(3));
+
+        // check result
+        $this->assertCount($taskNb, $this->entityManager->getRepository(Task::class)->findAll());
+        $this->assertNull($this->entityManager->getRepository(Task::class)->findOneBy(['title' => "Forbidden " . $this->uniqid]));
+        /** @var Task $unchangedTask */
+        $unchangedTask = $this->entityManager->getRepository(Task::class)->find($oldId);
+        // the title has not been modified
+        $this->assertEquals($oldTitle, $unchangedTask->getTitle());
+        // the progress has not been modified
+        $this->assertSame($oldProgress, $unchangedTask->getProgress());
+        // the created date has not been modified
+        $this->assertEquals($taskToModify->getCreatedAt(), $unchangedTask->getCreatedAt());
+        // the updated date has not been modified
+        $this->assertEquals($taskToModify->getUpdatedAt(), $unchangedTask->getUpdatedAt());
     }
 
 }

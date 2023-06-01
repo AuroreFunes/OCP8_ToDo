@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\User;
+namespace App\Test\Service\User;
 
 use App\Entity\User;
 use App\Service\User\CreateUserService;

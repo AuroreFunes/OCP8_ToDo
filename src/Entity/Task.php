@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
+ * @UniqueEntity(fields={"title"}, message="Une tâche avec le même titre existe déjà.")
  */
 class Task
 {
@@ -21,6 +23,12 @@ class Task
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Vous devez saisir un titre.")
+     * @Assert\Length(
+     *      min=2,
+     *      max=255,
+     *      minMessage="Le titre doit contenir au moins deux caractères.",
+     *      maxMessage="Le titre ne doit pas dépasser 255 caractères."
+     * )
      */
     private $title;
 
@@ -41,6 +49,26 @@ class Task
     private $author;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 100,
+     *      notInRangeMessage = "La progression de la tâche doit être entre {{ min }} et {{ max }} %."
+     * )
+     */
+    private $progress;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="linkedTasks")
+     */
+    private $actor;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $deadLine;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -53,7 +81,8 @@ class Task
     public function __construct()
     {
         $this->createdAt = new \Datetime();
-        $this->isDone = false;
+        $this->isDone    = false;
+        $this->progress  = 0;
     }
 
     public function getId(): ?int
@@ -112,6 +141,42 @@ class Task
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getProgress(): ?int
+    {
+        return $this->progress;
+    }
+
+    public function setProgress(?int $progress): self
+    {
+        $this->progress = $progress;
+
+        return $this;
+    }
+
+    public function getActor(): ?User
+    {
+        return $this->actor;
+    }
+
+    public function setActor(?User $actor): self
+    {
+        $this->actor = $actor;
+
+        return $this;
+    }
+
+    public function getDeadLine(): ?\DateTimeInterface
+    {
+        return $this->deadLine;
+    }
+
+    public function setDeadLine(?\DateTimeInterface $deadLine): self
+    {
+        $this->deadLine = $deadLine;
 
         return $this;
     }

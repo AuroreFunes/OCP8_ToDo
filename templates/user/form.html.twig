@@ -22,7 +22,7 @@
         {{ form_start(form) }}
         {{ form_widget(form) }}
 
-        <p class="text-center"><button type="submit" class="btn btn-success pull-right">
+        <p class="text-center"><button type="submit" class="btn btn-success pull-right" id="btn-submit">
             {% if mode == "create" %}Créer l'utilisateur
             {% else %}Appliquer les modifications
             {% endif %}

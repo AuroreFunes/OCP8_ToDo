@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for C:\wamp64\www\OCP8\src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="_css/style.css" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">C:\wamp64\www\OCP8\src</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controller/SecurityController.php.html#10">App\Controller\SecurityController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/AppFixtures.php.html#11">App\DataFixtures\AppFixtures</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#20">App\Entity\User</a></td><td class="text-right">68%</td></tr>
+       <tr><td><a href="Service/Task/CreateTaskService.php.html#10">App\Service\Task\CreateTaskService</a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Service/Task/EditTaskService.php.html#10">App\Service\Task\EditTaskService</a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Service/Task/DeleteTaskService.php.html#10">App\Service\Task\DeleteTaskService</a></td><td class="text-right">82%</td></tr>
+       <tr><td><a href="Service/User/EditUserService.php.html#10">App\Service\User\EditUserService</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#10">App\Service\Task\SetTaskProgressService</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#19">App\Controller\UserController</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Service/User/CreateUserService.php.html#10">App\Service\User\CreateUserService</a></td><td class="text-right">86%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#22">App\Controller\TaskController</a></td><td class="text-right">86%</td></tr>
+       <tr><td><a href="Service/User/DeleteUserService.php.html#9">App\Service\User\DeleteUserService</a></td><td class="text-right">88%</td></tr>
+       <tr><td><a href="Service/User/ChangePasswordService.php.html#10">App\Service\User\ChangePasswordService</a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DataFixtures/AppFixtures.php.html#11">App\DataFixtures\AppFixtures</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Entity/User.php.html#20">App\Entity\User</a></td><td class="text-right">50</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#22">App\Controller\TaskController</a></td><td class="text-right">35</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#19">App\Controller\UserController</a></td><td class="text-right">22</td></tr>
+       <tr><td><a href="Service/User/EditUserService.php.html#10">App\Service\User\EditUserService</a></td><td class="text-right">15</td></tr>
+       <tr><td><a href="Service/User/DeleteUserService.php.html#9">App\Service\User\DeleteUserService</a></td><td class="text-right">14</td></tr>
+       <tr><td><a href="Service/User/CreateUserService.php.html#10">App\Service\User\CreateUserService</a></td><td class="text-right">13</td></tr>
+       <tr><td><a href="Service/User/ChangePasswordService.php.html#10">App\Service\User\ChangePasswordService</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/SecurityController.php.html#10">App\Controller\SecurityController</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#10">App\Service\Task\SetTaskProgressService</a></td><td class="text-right">11</td></tr>
+       <tr><td><a href="Service/Task/DeleteTaskService.php.html#10">App\Service\Task\DeleteTaskService</a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Service/Task/EditTaskService.php.html#10">App\Service\Task\EditTaskService</a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Service/Task/CreateTaskService.php.html#10">App\Service\Task\CreateTaskService</a></td><td class="text-right">7</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controller/SecurityController.php.html#15"><abbr title="App\Controller\SecurityController::loginAction">loginAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/SecurityController.php.html#34"><abbr title="App\Controller\SecurityController::logoutCheck">logoutCheck</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#156"><abbr title="App\Controller\TaskController::toggleTaskAction">toggleTaskAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/AppFixtures.php.html#15"><abbr title="App\DataFixtures\AppFixtures::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DataFixtures/AppFixtures.php.html#20"><abbr title="App\DataFixtures\AppFixtures::load">load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/Task.php.html#129"><abbr title="App\Entity\Task::toggle">toggle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#211"><abbr title="App\Entity\User::removeTask">removeTask</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#237"><abbr title="App\Entity\User::eraseCredentials">eraseCredentials</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#251"><abbr title="App\Entity\User::addLinkedTask">addLinkedTask</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity/User.php.html#261"><abbr title="App\Entity\User::removeLinkedTask">removeLinkedTask</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/Task/DeleteTaskService.php.html#56"><abbr title="App\Service\Task\DeleteTaskService::makeTaskDelete">makeTaskDelete</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Service/User/EditUserService.php.html#61"><abbr title="App\Service\User\EditUserService::makeUserUpdate">makeUserUpdate</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Service/Task/EditTaskService.php.html#55"><abbr title="App\Service\Task\EditTaskService::makeTaskUpdate">makeTaskUpdate</abbr></a></td><td class="text-right">62%</td></tr>
+       <tr><td><a href="Service/Task/CreateTaskService.php.html#52"><abbr title="App\Service\Task\CreateTaskService::makeTaskCreation">makeTaskCreation</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#64"><abbr title="App\Service\Task\SetTaskProgressService::makeTaskUpdate">makeTaskUpdate</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#90"><abbr title="App\Controller\UserController::deleteAction">deleteAction</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Service/User/ChangePasswordService.php.html#69"><abbr title="App\Service\User\ChangePasswordService::makeChange">makeChange</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Service/User/CreateUserService.php.html#61"><abbr title="App\Service\User\CreateUserService::makeUserCreation">makeUserCreation</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Service/User/DeleteUserService.php.html#62"><abbr title="App\Service\User\DeleteUserService::makeUserDeletion">makeUserDeletion</abbr></a></td><td class="text-right">72%</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#48"><abbr title="App\Repository\UserRepository::upgradePassword">upgradePassword</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#109"><abbr title="App\Controller\TaskController::editAction">editAction</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#34"><abbr title="App\Controller\UserController::createAction">createAction</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#76"><abbr title="App\Controller\TaskController::createTaskAction">createTaskAction</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#116"><abbr title="App\Controller\UserController::changePasswordAction">changePasswordAction</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#22"><abbr title="App\Service\Task\SetTaskProgressService::setProgress">setProgress</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DataFixtures/AppFixtures.php.html#20"><abbr title="App\DataFixtures\AppFixtures::load">load</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Entity/User.php.html#211"><abbr title="App\Entity\User::removeTask">removeTask</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity/User.php.html#261"><abbr title="App\Entity\User::removeLinkedTask">removeLinkedTask</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#109"><abbr title="App\Controller\TaskController::editAction">editAction</abbr></a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#116"><abbr title="App\Controller\UserController::changePasswordAction">changePasswordAction</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#22"><abbr title="App\Service\Task\SetTaskProgressService::setProgress">setProgress</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/SecurityController.php.html#15"><abbr title="App\Controller\SecurityController::loginAction">loginAction</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity/User.php.html#251"><abbr title="App\Entity\User::addLinkedTask">addLinkedTask</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#34"><abbr title="App\Controller\UserController::createAction">createAction</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Controller/TaskController.php.html#76"><abbr title="App\Controller\TaskController::createTaskAction">createTaskAction</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Controller/UserController.php.html#90"><abbr title="App\Controller\UserController::deleteAction">deleteAction</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Service/User/DeleteUserService.php.html#62"><abbr title="App\Service\User\DeleteUserService::makeUserDeletion">makeUserDeletion</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Service/User/EditUserService.php.html#61"><abbr title="App\Service\User\EditUserService::makeUserUpdate">makeUserUpdate</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Service/Task/DeleteTaskService.php.html#56"><abbr title="App\Service\Task\DeleteTaskService::makeTaskDelete">makeTaskDelete</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/Task/EditTaskService.php.html#55"><abbr title="App\Service\Task\EditTaskService::makeTaskUpdate">makeTaskUpdate</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/Task/CreateTaskService.php.html#52"><abbr title="App\Service\Task\CreateTaskService::makeTaskCreation">makeTaskCreation</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/Task/SetTaskProgressService.php.html#64"><abbr title="App\Service\Task\SetTaskProgressService::makeTaskUpdate">makeTaskUpdate</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/User/ChangePasswordService.php.html#69"><abbr title="App\Service\User\ChangePasswordService::makeChange">makeChange</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Service/User/CreateUserService.php.html#61"><abbr title="App\Service\User\CreateUserService::makeUserCreation">makeUserCreation</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Repository/UserRepository.php.html#48"><abbr title="App\Repository\UserRepository::upgradePassword">upgradePassword</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 9.2.23</a> using <a href="https://secure.php.net/" target="_top">PHP 8.2.0</a> and <a href="https://phpunit.de/">PHPUnit 9.5.28</a> at Tue May 30 15:10:11 UTC 2023.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js" type="text/javascript"></script>
+  <script src="_js/d3.min.js" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([2,0,0,0,0,0,0,1,0,10,2,11], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([10,0,0,0,0,1,1,3,5,5,10,89], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Controller\/DefaultController.php.html#9\">App\\Controller\\DefaultController<\/a>"],[0,3,"<a href=\"Controller\/SecurityController.php.html#10\">App\\Controller\\SecurityController<\/a>"],[86.86868686868688,33,"<a href=\"Controller\/TaskController.php.html#22\">App\\Controller\\TaskController<\/a>"],[85.41666666666666,21,"<a href=\"Controller\/UserController.php.html#19\">App\\Controller\\UserController<\/a>"],[0,8,"<a href=\"DataFixtures\/AppFixtures.php.html#11\">App\\DataFixtures\\AppFixtures<\/a>"],[93.93939393939394,21,"<a href=\"Entity\/Task.php.html#14\">App\\Entity\\Task<\/a>"],[68.29268292682927,27,"<a href=\"Entity\/User.php.html#20\">App\\Entity\\User<\/a>"],[100,3,"<a href=\"Form\/CreateUserType.php.html#16\">App\\Form\\CreateUserType<\/a>"],[100,3,"<a href=\"Form\/EditUserType.php.html#14\">App\\Form\\EditUserType<\/a>"],[100,2,"<a href=\"Form\/TaskProgressType.php.html#11\">App\\Form\\TaskProgressType<\/a>"],[100,2,"<a href=\"Form\/TaskType.php.html#16\">App\\Form\\TaskType<\/a>"],[100,2,"<a href=\"Form\/UserPasswordType.php.html#12\">App\\Form\\UserPasswordType<\/a>"],[100,0,"<a href=\"Kernel.php.html#8\">App\\Kernel<\/a>"],[100,6,"<a href=\"Repository\/TaskRepository.php.html#18\">App\\Repository\\TaskRepository<\/a>"],[90.9090909090909,7,"<a href=\"Repository\/UserRepository.php.html#20\">App\\Repository\\UserRepository<\/a>"],[100,15,"<a href=\"Service\/ServiceHelper.php.html#10\">App\\Service\\ServiceHelper<\/a>"],[80.95238095238095,7,"<a href=\"Service\/Task\/CreateTaskService.php.html#10\">App\\Service\\Task\\CreateTaskService<\/a>"],[82.6086956521739,10,"<a href=\"Service\/Task\/DeleteTaskService.php.html#10\">App\\Service\\Task\\DeleteTaskService<\/a>"],[81.81818181818183,8,"<a href=\"Service\/Task\/EditTaskService.php.html#10\">App\\Service\\Task\\EditTaskService<\/a>"],[85.29411764705883,11,"<a href=\"Service\/Task\/SetTaskProgressService.php.html#10\">App\\Service\\Task\\SetTaskProgressService<\/a>"],[100,14,"<a href=\"Service\/Task\/TaskHelper.php.html#11\">App\\Service\\Task\\TaskHelper<\/a>"],[88.88888888888889,12,"<a href=\"Service\/User\/ChangePasswordService.php.html#10\">App\\Service\\User\\ChangePasswordService<\/a>"],[86.8421052631579,13,"<a href=\"Service\/User\/CreateUserService.php.html#10\">App\\Service\\User\\CreateUserService<\/a>"],[88.57142857142857,14,"<a href=\"Service\/User\/DeleteUserService.php.html#9\">App\\Service\\User\\DeleteUserService<\/a>"],[85,15,"<a href=\"Service\/User\/EditUserService.php.html#10\">App\\Service\\User\\EditUserService<\/a>"],[100,4,"<a href=\"Service\/User\/UserHelper.php.html#9\">App\\Service\\User\\UserHelper<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Controller\/DefaultController.php.html#14\">App\\Controller\\DefaultController::showHomepage<\/a>"],[0,2,"<a href=\"Controller\/SecurityController.php.html#15\">App\\Controller\\SecurityController::loginAction<\/a>"],[0,1,"<a href=\"Controller\/SecurityController.php.html#34\">App\\Controller\\SecurityController::logoutCheck<\/a>"],[100,1,"<a href=\"Controller\/TaskController.php.html#31\">App\\Controller\\TaskController::listAction<\/a>"],[100,1,"<a href=\"Controller\/TaskController.php.html#46\">App\\Controller\\TaskController::listMyTasksAction<\/a>"],[100,1,"<a href=\"Controller\/TaskController.php.html#62\">App\\Controller\\TaskController::listClosedAction<\/a>"],[85.71428571428571,5,"<a href=\"Controller\/TaskController.php.html#76\">App\\Controller\\TaskController::createTaskAction<\/a>"],[80.95238095238095,9,"<a href=\"Controller\/TaskController.php.html#109\">App\\Controller\\TaskController::editAction<\/a>"],[0,1,"<a href=\"Controller\/TaskController.php.html#156\">App\\Controller\\TaskController::toggleTaskAction<\/a>"],[100,4,"<a href=\"Controller\/TaskController.php.html#172\">App\\Controller\\TaskController::deleteTaskAction<\/a>"],[100,4,"<a href=\"Controller\/TaskController.php.html#214\">App\\Controller\\TaskController::xhrDeleteTask<\/a>"],[90.47619047619048,7,"<a href=\"Controller\/TaskController.php.html#247\">App\\Controller\\TaskController::setProgressAction<\/a>"],[100,1,"<a href=\"Controller\/UserController.php.html#25\">App\\Controller\\UserController::listAction<\/a>"],[81.81818181818183,5,"<a href=\"Controller\/UserController.php.html#34\">App\\Controller\\UserController::createAction<\/a>"],[100,4,"<a href=\"Controller\/UserController.php.html#63\">App\\Controller\\UserController::editAction<\/a>"],[70,4,"<a href=\"Controller\/UserController.php.html#90\">App\\Controller\\UserController::deleteAction<\/a>"],[87.5,7,"<a href=\"Controller\/UserController.php.html#116\">App\\Controller\\UserController::changePasswordAction<\/a>"],[0,1,"<a href=\"DataFixtures\/AppFixtures.php.html#15\">App\\DataFixtures\\AppFixtures::__construct<\/a>"],[0,7,"<a href=\"DataFixtures\/AppFixtures.php.html#20\">App\\DataFixtures\\AppFixtures::load<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#81\">App\\Entity\\Task::__construct<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#88\">App\\Entity\\Task::getId<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#93\">App\\Entity\\Task::getTitle<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#98\">App\\Entity\\Task::setTitle<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#105\">App\\Entity\\Task::getContent<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#110\">App\\Entity\\Task::setContent<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#117\">App\\Entity\\Task::isDone<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#122\">App\\Entity\\Task::setIsDone<\/a>"],[0,1,"<a href=\"Entity\/Task.php.html#129\">App\\Entity\\Task::toggle<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#136\">App\\Entity\\Task::getAuthor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#141\">App\\Entity\\Task::setAuthor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#148\">App\\Entity\\Task::getProgress<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#153\">App\\Entity\\Task::setProgress<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#160\">App\\Entity\\Task::getActor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#165\">App\\Entity\\Task::setActor<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#172\">App\\Entity\\Task::getDeadLine<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#177\">App\\Entity\\Task::setDeadLine<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#184\">App\\Entity\\Task::getCreatedAt<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#189\">App\\Entity\\Task::setCreatedAt<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#196\">App\\Entity\\Task::getUpdatedAt<\/a>"],[100,1,"<a href=\"Entity\/Task.php.html#201\">App\\Entity\\Task::setUpdatedAt<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#97\">App\\Entity\\User::__construct<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#104\">App\\Entity\\User::getId<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#112\">App\\Entity\\User::getUsername<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#117\">App\\Entity\\User::setUsername<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#129\">App\\Entity\\User::getUserIdentifier<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#137\">App\\Entity\\User::getPassword<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#142\">App\\Entity\\User::setPassword<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#149\">App\\Entity\\User::getEmail<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#154\">App\\Entity\\User::setEmail<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#164\">App\\Entity\\User::getRoles<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#174\">App\\Entity\\User::setRoles<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#181\">App\\Entity\\User::isActive<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#186\">App\\Entity\\User::setIsActive<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#196\">App\\Entity\\User::getTasks<\/a>"],[100,2,"<a href=\"Entity\/User.php.html#201\">App\\Entity\\User::addTask<\/a>"],[0,3,"<a href=\"Entity\/User.php.html#211\">App\\Entity\\User::removeTask<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#229\">App\\Entity\\User::getSalt<\/a>"],[0,1,"<a href=\"Entity\/User.php.html#237\">App\\Entity\\User::eraseCredentials<\/a>"],[100,1,"<a href=\"Entity\/User.php.html#246\">App\\Entity\\User::getLinkedTasks<\/a>"],[0,2,"<a href=\"Entity\/User.php.html#251\">App\\Entity\\User::addLinkedTask<\/a>"],[0,3,"<a href=\"Entity\/User.php.html#261\">App\\Entity\\User::removeLinkedTask<\/a>"],[100,2,"<a href=\"Form\/CreateUserType.php.html#18\">App\\Form\\CreateUserType::buildForm<\/a>"],[100,1,"<a href=\"Form\/CreateUserType.php.html#51\">App\\Form\\CreateUserType::configureOptions<\/a>"],[100,2,"<a href=\"Form\/EditUserType.php.html#16\">App\\Form\\EditUserType::buildForm<\/a>"],[100,1,"<a href=\"Form\/EditUserType.php.html#42\">App\\Form\\EditUserType::configureOptions<\/a>"],[100,1,"<a href=\"Form\/TaskProgressType.php.html#13\">App\\Form\\TaskProgressType::buildForm<\/a>"],[100,1,"<a href=\"Form\/TaskProgressType.php.html#25\">App\\Form\\TaskProgressType::configureOptions<\/a>"],[100,1,"<a href=\"Form\/TaskType.php.html#18\">App\\Form\\TaskType::buildForm<\/a>"],[100,1,"<a href=\"Form\/TaskType.php.html#45\">App\\Form\\TaskType::configureOptions<\/a>"],[100,1,"<a href=\"Form\/UserPasswordType.php.html#14\">App\\Form\\UserPasswordType::buildForm<\/a>"],[100,1,"<a href=\"Form\/UserPasswordType.php.html#27\">App\\Form\\UserPasswordType::configureOptions<\/a>"],[100,1,"<a href=\"Repository\/TaskRepository.php.html#20\">App\\Repository\\TaskRepository::__construct<\/a>"],[100,2,"<a href=\"Repository\/TaskRepository.php.html#25\">App\\Repository\\TaskRepository::add<\/a>"],[100,2,"<a href=\"Repository\/TaskRepository.php.html#34\">App\\Repository\\TaskRepository::remove<\/a>"],[100,1,"<a href=\"Repository\/TaskRepository.php.html#43\">App\\Repository\\TaskRepository::findTasksByUser<\/a>"],[100,1,"<a href=\"Repository\/UserRepository.php.html#22\">App\\Repository\\UserRepository::__construct<\/a>"],[100,2,"<a href=\"Repository\/UserRepository.php.html#27\">App\\Repository\\UserRepository::add<\/a>"],[100,2,"<a href=\"Repository\/UserRepository.php.html#36\">App\\Repository\\UserRepository::remove<\/a>"],[75,2,"<a href=\"Repository\/UserRepository.php.html#48\">App\\Repository\\UserRepository::upgradePassword<\/a>"],[100,1,"<a href=\"Service\/ServiceHelper.php.html#33\">App\\Service\\ServiceHelper::__construct<\/a>"],[100,1,"<a href=\"Service\/ServiceHelper.php.html#39\">App\\Service\\ServiceHelper::initHelper<\/a>"],[100,3,"<a href=\"Service\/ServiceHelper.php.html#53\">App\\Service\\ServiceHelper::checkUser<\/a>"],[100,2,"<a href=\"Service\/ServiceHelper.php.html#71\">App\\Service\\ServiceHelper::userIsActive<\/a>"],[100,1,"<a href=\"Service\/ServiceHelper.php.html#83\">App\\Service\\ServiceHelper::userIsAdmin<\/a>"],[100,3,"<a href=\"Service\/ServiceHelper.php.html#92\">App\\Service\\ServiceHelper::checkUserIsValidAndAdmin<\/a>"],[100,2,"<a href=\"Service\/ServiceHelper.php.html#109\">App\\Service\\ServiceHelper::actingUserIsAuthenticatedUser<\/a>"],[100,1,"<a href=\"Service\/ServiceHelper.php.html#121\">App\\Service\\ServiceHelper::getStatus<\/a>"],[100,1,"<a href=\"Service\/ServiceHelper.php.html#136\">App\\Service\\ServiceHelper::getErrorsMessages<\/a>"],[100,1,"<a href=\"Service\/Task\/CreateTaskService.php.html#14\">App\\Service\\Task\\CreateTaskService::__construct<\/a>"],[90.9090909090909,4,"<a href=\"Service\/Task\/CreateTaskService.php.html#22\">App\\Service\\Task\\CreateTaskService::createTask<\/a>"],[66.66666666666666,2,"<a href=\"Service\/Task\/CreateTaskService.php.html#52\">App\\Service\\Task\\CreateTaskService::makeTaskCreation<\/a>"],[100,1,"<a href=\"Service\/Task\/DeleteTaskService.php.html#12\">App\\Service\\Task\\DeleteTaskService::__construct<\/a>"],[92.3076923076923,5,"<a href=\"Service\/Task\/DeleteTaskService.php.html#20\">App\\Service\\Task\\DeleteTaskService::deleteTask<\/a>"],[40,2,"<a href=\"Service\/Task\/DeleteTaskService.php.html#56\">App\\Service\\Task\\DeleteTaskService::makeTaskDelete<\/a>"],[100,2,"<a href=\"Service\/Task\/DeleteTaskService.php.html#74\">App\\Service\\Task\\DeleteTaskService::checkTaskIsNotEmpty<\/a>"],[100,1,"<a href=\"Service\/Task\/EditTaskService.php.html#12\">App\\Service\\Task\\EditTaskService::__construct<\/a>"],[92.3076923076923,5,"<a href=\"Service\/Task\/EditTaskService.php.html#20\">App\\Service\\Task\\EditTaskService::editTask<\/a>"],[62.5,2,"<a href=\"Service\/Task\/EditTaskService.php.html#55\">App\\Service\\Task\\EditTaskService::makeTaskUpdate<\/a>"],[100,1,"<a href=\"Service\/Task\/SetTaskProgressService.php.html#14\">App\\Service\\Task\\SetTaskProgressService::__construct<\/a>"],[88.23529411764706,6,"<a href=\"Service\/Task\/SetTaskProgressService.php.html#22\">App\\Service\\Task\\SetTaskProgressService::setProgress<\/a>"],[66.66666666666666,2,"<a href=\"Service\/Task\/SetTaskProgressService.php.html#64\">App\\Service\\Task\\SetTaskProgressService::makeTaskUpdate<\/a>"],[100,2,"<a href=\"Service\/Task\/SetTaskProgressService.php.html#84\">App\\Service\\Task\\SetTaskProgressService::checkParameters<\/a>"],[100,1,"<a href=\"Service\/Task\/TaskHelper.php.html#21\">App\\Service\\Task\\TaskHelper::__construct<\/a>"],[100,6,"<a href=\"Service\/Task\/TaskHelper.php.html#34\">App\\Service\\Task\\TaskHelper::checkTask<\/a>"],[100,4,"<a href=\"Service\/Task\/TaskHelper.php.html#70\">App\\Service\\Task\\TaskHelper::checkTaskOwner<\/a>"],[100,3,"<a href=\"Service\/Task\/TaskHelper.php.html#95\">App\\Service\\Task\\TaskHelper::checkTaskActor<\/a>"],[100,1,"<a href=\"Service\/User\/ChangePasswordService.php.html#18\">App\\Service\\User\\ChangePasswordService::__construct<\/a>"],[92.85714285714286,5,"<a href=\"Service\/User\/ChangePasswordService.php.html#33\">App\\Service\\User\\ChangePasswordService::changePassword<\/a>"],[70,2,"<a href=\"Service\/User\/ChangePasswordService.php.html#69\">App\\Service\\User\\ChangePasswordService::makeChange<\/a>"],[100,4,"<a href=\"Service\/User\/ChangePasswordService.php.html#107\">App\\Service\\User\\ChangePasswordService::checkUserToUpdate<\/a>"],[100,1,"<a href=\"Service\/User\/CreateUserService.php.html#16\">App\\Service\\User\\CreateUserService::__construct<\/a>"],[90.9090909090909,4,"<a href=\"Service\/User\/CreateUserService.php.html#31\">App\\Service\\User\\CreateUserService::createUser<\/a>"],[70,2,"<a href=\"Service\/User\/CreateUserService.php.html#61\">App\\Service\\User\\CreateUserService::makeUserCreation<\/a>"],[92.85714285714286,6,"<a href=\"Service\/User\/CreateUserService.php.html#85\">App\\Service\\User\\CreateUserService::checkNewUser<\/a>"],[100,1,"<a href=\"Service\/User\/DeleteUserService.php.html#14\">App\\Service\\User\\DeleteUserService::__construct<\/a>"],[93.75,6,"<a href=\"Service\/User\/DeleteUserService.php.html#22\">App\\Service\\User\\DeleteUserService::deleteUser<\/a>"],[72.72727272727273,4,"<a href=\"Service\/User\/DeleteUserService.php.html#62\">App\\Service\\User\\DeleteUserService::makeUserDeletion<\/a>"],[100,3,"<a href=\"Service\/User\/DeleteUserService.php.html#97\">App\\Service\\User\\DeleteUserService::chekUserToDeleted<\/a>"],[100,1,"<a href=\"Service\/User\/EditUserService.php.html#17\">App\\Service\\User\\EditUserService::__construct<\/a>"],[90.9090909090909,4,"<a href=\"Service\/User\/EditUserService.php.html#31\">App\\Service\\User\\EditUserService::editUser<\/a>"],[50,3,"<a href=\"Service\/User\/EditUserService.php.html#61\">App\\Service\\User\\EditUserService::makeUserUpdate<\/a>"],[94.44444444444444,7,"<a href=\"Service\/User\/EditUserService.php.html#84\">App\\Service\\User\\EditUserService::checkUserToUpdate<\/a>"],[100,1,"<a href=\"Service\/User\/UserHelper.php.html#16\">App\\Service\\User\\UserHelper::__construct<\/a>"],[100,3,"<a href=\"Service\/User\/UserHelper.php.html#25\">App\\Service\\User\\UserHelper::checkUserRoles<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

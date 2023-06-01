@@ -68,6 +68,7 @@ class ChangePasswordService extends UserHelper
     // ============================================================================================
     protected function makeChange(): bool
     {
+        /*
         $this->functArgs->get('userToUpdate')
             ->setPassword($this->pwdHasher->hashPassword(
                 $this->functArgs->get('userToUpdate'), 
@@ -79,7 +80,20 @@ class ChangePasswordService extends UserHelper
         } catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);
             return false;
+        }*/
+
+        try {
+            $this->manager->getRepository(User::class)->upgradePassword(
+                $this->functArgs->get('userToUpdate'),
+                $this->pwdHasher->hashPassword(
+                    $this->functArgs->get('userToUpdate'), 
+                    $this->functArgs->get('userToUpdate')->getPassword())
+                );
+        } catch (\Exception $e) {
+            $this->errMessages->add(self::ERR_DB_ACCESS);
+            return false;
         }
+        
 
         return true;
     }

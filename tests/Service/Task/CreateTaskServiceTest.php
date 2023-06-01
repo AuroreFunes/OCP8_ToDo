@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\Task;
+namespace App\Test\Service\Task;
 
 use App\Entity\Task;
 use App\Entity\User;
@@ -9,9 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Required Fixtures :
- *  - "Anonymous" User, is_active = false, with at least 1 task
- *  - "Admin" User, is_active = true, with at least 1 task
- *  - "User" User, is_active = true, with at least 1 task
+ *  - "Anonymous" User, is_active = false
+ *  - "Admin" User, is_active = true
+ *  - "User" User, is_active = true
  */
 class CreateTaskServiceTest extends KernelTestCase
 {
@@ -61,7 +61,7 @@ class CreateTaskServiceTest extends KernelTestCase
         );
 
         // run service
-        $this->service->createTask($this->giveValidTask($this->admin->getUserIdentifier()), $this->admin);
+        $this->service->createTask($this->giveValidTask($taskTitle), $this->admin);
 
         // check status
         $this->assertTrue($this->service->getStatus());
@@ -77,6 +77,9 @@ class CreateTaskServiceTest extends KernelTestCase
         $this->assertNotNull($newTask);
         $this->assertEquals($taskTitle, $newTask->getTitle());
         $this->assertEquals($this->admin->getUserIdentifier(), $newTask->getAuthor()->getUserIdentifier());
+        $this->assertEquals($this->user, $newTask->getActor());
+        $this->assertNotEmpty($newTask->getCreatedAt());
+        $this->assertEmpty($newTask->getUpdatedAt());
     }
 
     /**
@@ -95,7 +98,7 @@ class CreateTaskServiceTest extends KernelTestCase
         );
 
         // run service
-        $this->service->createTask($this->giveValidTask($this->user->getUserIdentifier()), $this->user);
+        $this->service->createTask($this->giveValidTask($taskTitle), $this->user);
 
         // check status
         $this->assertTrue($this->service->getStatus());
@@ -111,10 +114,11 @@ class CreateTaskServiceTest extends KernelTestCase
         $this->assertNotNull($newTask);
         $this->assertEquals($taskTitle, $newTask->getTitle());
         $this->assertEquals($this->user->getUserIdentifier(), $newTask->getAuthor()->getUserIdentifier());
+        $this->assertEquals($this->user, $newTask->getActor());
     }
 
     /**
-     * Case KO: the anonymous user creates to modify a task
+     * Case KO: the anonymous user creates a task
      */
     public function testCreateTaskWithInactiveUser()
     {
@@ -146,9 +150,10 @@ class CreateTaskServiceTest extends KernelTestCase
     {
         // init before run
         $taskNb = count($this->entityManager->getRepository(Task::class)->findAll());
+        $taskTitle = "Test ko authenticated user " . $this->uniqid;
 
         // run service
-        $this->service->createTask($this->giveValidTask(""), null);
+        $this->service->createTask($this->giveValidTask($taskTitle), null);
 
         // check status
         $this->assertFalse($this->service->getStatus());
@@ -164,7 +169,7 @@ class CreateTaskServiceTest extends KernelTestCase
     }
 
     /**
-     * Case KO: the task is not valid
+     * Case KO: the task is not valid (empty)
      */
     public function testCreateTaskEmpty()
     {
@@ -212,16 +217,116 @@ class CreateTaskServiceTest extends KernelTestCase
         $this->assertEquals("La tâche n'est pas renseignée.", $this->service->getErrorsMessages()->get(0));
     }
 
+    /**
+     * Test Ko : the task actor is inactive
+     */
+    public function tesCreateTaskKoInactiveActor()
+    {
+        // init before run
+        $taskNb = count($this->entityManager->getRepository(Task::class)->findAll());
+        $taskTitle = "New Task Ko" . $this->admin->getUserIdentifier() . " " . $this->uniqid;
+
+        // check before run
+        $this->assertCount(
+            0, 
+            $this->entityManager->getRepository(Task::class)->findBy(['title' => $taskTitle])
+        );
+
+        // run service
+        $this->service->createTask($this->giveInvalidActor($taskTitle), $this->admin);
+
+        // check status
+        $this->assertFalse($this->service->getStatus());
+
+        // check result
+        $this->assertCount($taskNb, $this->entityManager->getRepository(Task::class)->findAll());
+
+        // count errors
+        $this->assertCount(1, $this->service->getErrorsMessages());
+
+        // read errors
+        $this->assertEquals("La tâche ne peut pas être affectée à un utilisateur inactif.", $this->service->getErrorsMessages()->get(0));
+    }
+
+    /**
+     * Test Ko : invalid datas
+     */
+    public function tesCreateTaskKoInvalidDatas()
+    {
+        // init before run
+        $taskNb = count($this->entityManager->getRepository(Task::class)->findAll());
+        $taskTitle = $this->giveInvalidTitleTooLong();
+
+        // check before run
+        $this->assertCount(
+            0, 
+            $this->entityManager->getRepository(Task::class)->findBy(['title' => $taskTitle])
+        );
+
+        // run service
+        $this->service->createTask($this->giveInvalidTask($taskTitle), $this->admin);
+
+        // check status
+        $this->assertFalse($this->service->getStatus());
+
+        // check result
+        $this->assertCount($taskNb, $this->entityManager->getRepository(Task::class)->findAll());
+
+        // count errors
+        $this->assertCount(1, $this->service->getErrorsMessages());
+
+        // read errors
+        $this->assertEquals("Le titre ne doit pas dépasser 255 caractères.", $this->service->getErrorsMessages()->get(0));
+        $this->assertEquals("La progression de la tâche doit être entre 0 et 100 %.", $this->service->getErrorsMessages()->get(1));
+        $this->assertEquals("La tâche ne peut pas être affectée à un utilisateur inactif.", $this->service->getErrorsMessages()->get(2));
+    }
+
     // ============================================================================================
     // DATAS FOR TESTS
     // ============================================================================================
-    protected function giveValidTask(string $username)
+    protected function giveValidTask(string $taskTitle): Task
     {
         $task = new Task();
         $task
-            ->setTitle("New Task " . $username . " " . $this->uniqid)
-            ->setContent("Valid content for new task " . $this->uniqid);
+            ->setTitle($taskTitle)
+            ->setContent("Valid content for new task " . $this->uniqid)
+            ->setActor($this->user);
         return $task;
+    }
+
+    protected function giveInvalidActor(string $taskTitle): Task
+    {
+        $task = new Task();
+        $task
+            ->setTitle($taskTitle)
+            ->setContent("Invalid task " . $this->uniqid)
+            ->setActor($this->anonymous);
+        return $task;
+    }
+
+    protected function giveInvalidTask(string $taskTitle): Task
+    {
+        $task = new Task();
+        $task
+            ->setTitle($taskTitle)
+            ->setContent("Valid content for new task " . $this->uniqid)
+            ->setActor($this->anonymous)
+            ->setProgress(-1);
+        return $task;
+    }
+
+    protected function giveInvalidTitleTooLong(): string
+    {
+        $title = "";
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // generate title
+        for ($i = 0; $i < 260; $i++)
+        {
+            $title .= $chars[rand(0, strlen($chars) - 1)];
+        }
+
+        return $title;
     }
 
 }

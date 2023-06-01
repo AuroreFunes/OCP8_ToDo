@@ -56,8 +56,7 @@ class DeleteTaskService extends TaskHelper {
     protected function makeTaskDelete(): bool
     {
         try {
-            $this->manager->remove($this->functArgs->get('task'));
-            $this->manager->flush();
+            $this->manager->getRepository(Task::class)->remove($this->functArgs->get('task'), true);
         }
         catch (\Exception $e) {
             $this->errMessages->add(self::ERR_DB_ACCESS);

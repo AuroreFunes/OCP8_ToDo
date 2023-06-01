@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block header_title %}
+    <h1 class="display-4 fw-bolder text-center mt-0 mb-0">Oups !</h1>
+    <p class="lead fw-normal text-black-50 text-center mt-0">Une erreur est survenue</p>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <h2>Erreur...</h2>
+        <p>
+            Une erreur s'est produite pendant le traitement de votre demande. 
+            Merci de réessayer dans quelques instants.
+        </p>
+    </div>
+{% endblock %}
